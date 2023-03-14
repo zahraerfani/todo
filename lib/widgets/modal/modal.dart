@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ModalClass {
+  ModalClass._();
+
   static Future showModalBottomPage({
     required BuildContext context,
     required Widget child,
@@ -41,5 +43,23 @@ class ModalClass {
         );
       },
     );
+  }
+
+  static Future showModalBottomCustomSheet({
+    required BuildContext context,
+    required Widget child,
+  }) async {
+    final res = await showModalBottomSheet(
+        context: context,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
+        ),
+        builder: (context) {
+          return DraggableScrollableSheet(
+            builder: (_, controller) => Container(child: child),
+          );
+        });
+    return res;
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:todo/screen/add_task/add_task.dart';
 import 'package:todo/screen/home/home.dart';
+import 'package:todo/screen/show_image/show_image.dart';
 import 'package:todo/screen/splash/splash.dart';
 
 import 'const.dart';
@@ -17,6 +19,8 @@ class RouteGenerator {
           return const Home();
         case RouteName.addTask:
           return const AddTask();
+        case RouteName.showImage:
+          return ShowImage(image: args as XFile);
         default:
           return _errorRoute(settings.name);
       }

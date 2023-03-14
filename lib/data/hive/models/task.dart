@@ -15,7 +15,7 @@ class Task extends HiveObject {
   @HiveField(4)
   final String? note;
   @HiveField(5)
-  final String? image;
+  final List<String?>? image;
   @HiveField(6)
   final List<SubTask>? subTask;
   Task(

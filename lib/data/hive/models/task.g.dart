@@ -22,7 +22,7 @@ class TaskAdapter extends TypeAdapter<Task> {
       completion: fields[2] as String?,
       executionTime: fields[3] as String?,
       note: fields[4] as String?,
-      image: fields[5] as String?,
+      image: (fields[5] as List?)?.cast<String?>(),
       subTask: (fields[6] as List?)?.cast<SubTask>(),
     );
   }

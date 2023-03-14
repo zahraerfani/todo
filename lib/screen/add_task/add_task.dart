@@ -1,6 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:record/record.dart';
+import 'package:todo/Utils/upload_image.dart';
+import 'package:todo/config/route/const.dart';
 import 'package:todo/config/themes/my_drawing.dart';
+import 'package:todo/data/hive/models/task.dart';
+import 'package:todo/data/hive/requests/task_request.dart';
 import 'package:todo/data/media_query/media_query.dart';
 import 'package:todo/data/media_query/space_between.dart';
 import 'package:todo/data/model/front/header_model.dart';
@@ -25,6 +32,7 @@ class _AddTaskState extends State<AddTask> {
   final record = Record();
   bool recordAudio = false;
   String? audioPath;
+  List<String?> choosePhoto = [];
 
   @override
   void initState() {
@@ -63,7 +71,7 @@ class _AddTaskState extends State<AddTask> {
                       name = text;
                     });
                   },
-                  labelText: "Task Name",
+                  labelText: "Task name",
                   validation: "required",
                   preIcon: Icons.task,
                 ),
@@ -79,7 +87,6 @@ class _AddTaskState extends State<AddTask> {
                         title: "record",
                         child: AudioRecorder(
                           onStop: (path) {
-                            print('Recorded file path: $path');
                             setState(() {
                               audioPath = path;
                               recordAudio = true;
@@ -107,7 +114,7 @@ class _AddTaskState extends State<AddTask> {
                       note = text;
                     });
                   },
-                  labelText: "Add a Note",
+                  labelText: "Add a note",
                   validation: "required",
                   preIcon: Icons.note,
                 ),
@@ -117,8 +124,64 @@ class _AddTaskState extends State<AddTask> {
                     loading: false,
                     showBoxShadow: false,
                     icon: Icons.image,
-                    onTab: () {},
+                    onTab: () => chooseImageSource(),
                     title: "Add an image"),
+                intermediate(20),
+                choosePhoto.isNotEmpty
+                    ? Wrap(
+                        children: [
+                          for (int index = 0;
+                              index < choosePhoto.length;
+                              index++)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 10.0, horizontal: 10.0),
+                              child: InkWell(
+                                onTap: () => Navigator.of(context).pushNamed(
+                                    RouteName.showImage,
+                                    arguments: choosePhoto[index]!),
+                                child: Stack(
+                                  alignment: Alignment.topLeft,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(4.0),
+                                      child: Image.file(
+                                        File(choosePhoto[index]!),
+                                        width: 100,
+                                        height: 100,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            choosePhoto.removeAt(index);
+                                          });
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 3, horizontal: 3),
+                                          child: ClipOval(
+                                            child: Container(
+                                              alignment: Alignment.center,
+                                              width: 25,
+                                              height: 25,
+                                              color: MyColors.white,
+                                              child: const Icon(
+                                                Icons.clear,
+                                                color: MyColors.red,
+                                                size: 20,
+                                              ),
+                                            ),
+                                          ),
+                                        ))
+                                  ],
+                                ),
+                              ),
+                            ),
+                        ],
+                      )
+                    : Container(),
                 intermediate(20),
                 ButtonLoading(
                     btnColor: MyColors.primaryDark,
@@ -135,9 +198,48 @@ class _AddTaskState extends State<AddTask> {
     );
   }
 
+  chooseImageSource() async {
+    final res = await ModalClass.showModalBottomCustomSheet(
+        context: context,
+        child: Container(
+            color: MyColors.white,
+            width: context.width,
+            height: 200,
+            child: Column(
+              children: [
+                intermediate(20),
+                ButtonLoading(
+                    loading: false,
+                    showBoxShadow: false,
+                    onTab: () => Navigator.of(context).pop("camera"),
+                    title: "Camera"),
+                intermediate(20),
+                ButtonLoading(
+                    loading: false,
+                    showBoxShadow: false,
+                    onTab: () => Navigator.of(context).pop("gallery"),
+                    title: "Gallery"),
+              ],
+            )));
+    if (res != null && context.mounted) {
+      final result = await UploadImage.openImagePicker(
+          source: res == "camera" ? ImageSource.camera : ImageSource.gallery,
+          context: context);
+      if (result != null) {
+        setState(() {
+          choosePhoto.add(result.path);
+        });
+      }
+    }
+  }
+
   save() {
-    if (formKey.currentState!.validate()) {
+    if (formKey.currentState!.validate() &&
+        audioPath != null &&
+        choosePhoto.isNotEmpty) {
       print("1111111111111111111");
+      TaskHiveRequest.addTask(Task(
+          taskName: name!, record: audioPath, note: note!, image: choosePhoto));
     } else {
       print("ajsdhgkjd");
     }
