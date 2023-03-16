@@ -11,6 +11,7 @@ import 'package:todo/data/media_query/media_query.dart';
 import 'package:todo/data/media_query/space_between.dart';
 import 'package:todo/data/model/front/header_model.dart';
 import 'package:todo/data/model/front/sub_task_model.dart';
+import 'package:todo/screen/add_task/component/add_subtasks.dart';
 import 'package:todo/screen/add_task/component/audio_player.dart';
 import 'package:todo/screen/add_task/component/audio_recorder.dart';
 import 'package:todo/screen/add_task/component/calendar.dart';
@@ -95,60 +96,28 @@ class _AddTaskState extends State<AddTask> {
                     icon: Icons.arrow_forward_sharp,
                     onTab: () => addSubtask(),
                     title: "Add a subtask"),
-                // intermediate(10),
                 count > 0
                     ? Column(
                         children: [
                           for (int index = 0; index < count; index++)
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                InkWell(
-                                  onTap: () => setState(() => items[index]
-                                      .check = !items[index].check!),
-                                  child: Icon(
-                                    !items[index].check!
-                                        ? Icons.circle_outlined
-                                        : Icons.check_circle,
-                                    color: MyColors.orange,
-                                    size: 24,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: context.width - 150,
-                                  height: 50,
-                                  child: CustomInput(
-                                    enterData: (text) => setState(
-                                        () => items[index].subtaskName = text),
-                                    labelText: "Subtask name",
-                                    borderColor: Colors.transparent,
-                                  ),
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      count -= 1;
-                                      items.removeAt(index);
-                                    });
-                                  },
-                                  child: const Icon(
-                                    Icons.clear,
-                                    color: MyColors.grey_40,
-                                    size: 20,
-                                  ),
-                                ),
-                                const Icon(
-                                  Icons.list,
-                                  color: MyColors.grey_40,
-                                  size: 24,
-                                ),
-                              ],
+                            AddSubTasks(
+                              count: count,
+                              remove: () {
+                                setState(() {
+                                  count -= 1;
+                                  items.removeAt(index);
+                                });
+                              },
+                              changeCheck: () => setState(() =>
+                                  items[index].check = !items[index].check!),
+                              item: items[index],
+                              changeText: (text) => setState(
+                                  () => items[index].subtaskName = text),
                             )
                         ],
                       )
                     : Container(),
                 intermediate(10),
-
                 ButtonLoading(
                     btnWidth: context.width - 20,
                     loading: false,
@@ -284,7 +253,6 @@ class _AddTaskState extends State<AddTask> {
             priority: copyItems[i].priority));
       }
     }
-    // print((x[0].subtaskName));
     TaskHiveRequest.addTask(Task(
         taskName: "name",
         record: "audioPath",
