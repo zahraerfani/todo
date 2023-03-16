@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:record/record.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:todo/Utils/upload_image.dart';
+import 'package:todo/Utils/utils.dart';
 import 'package:todo/config/themes/my_drawing.dart';
 import 'package:todo/data/hive/models/task.dart';
 import 'package:todo/data/hive/requests/task_request.dart';
@@ -13,6 +13,7 @@ import 'package:todo/data/model/front/header_model.dart';
 import 'package:todo/screen/add_task/component/audio_player.dart';
 import 'package:todo/screen/add_task/component/audio_recorder.dart';
 import 'package:todo/screen/add_task/component/calendar.dart';
+import 'package:todo/screen/add_task/component/camera_or_gallery.dart';
 import 'package:todo/screen/add_task/component/show_images.dart';
 import 'package:todo/widgets/appbar/my_custom_appbar.dart';
 import 'package:todo/widgets/button/button_loading.dart';
@@ -34,6 +35,7 @@ class _AddTaskState extends State<AddTask> {
   bool recordAudio = false;
   String? audioPath;
   List<String> choosePhoto = [];
+  String? time;
 
   String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
@@ -124,8 +126,20 @@ class _AddTaskState extends State<AddTask> {
                     loading: false,
                     showBoxShadow: false,
                     icon: Icons.watch_later_outlined,
-                    onTab: () => calendarModal(),
-                    title: "Task completion date"),
+                    onTab: () => timeModal(),
+                    title: "Task execution time"),
+                // intermediate(10),
+                time != null
+                    ? Container(
+                        width: context.width - 45,
+                        height: 40,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          time!,
+                          style: textTheme.caption?.copyWith(fontSize: 14),
+                        ),
+                      )
+                    : Container(),
                 intermediate(10),
                 CustomInput(
                   enterData: (text) {
@@ -148,7 +162,7 @@ class _AddTaskState extends State<AddTask> {
                 intermediate(20),
                 choosePhoto.isNotEmpty
                     ? ShowImages(
-                        choosePhoto: choosePhoto!,
+                        choosePhoto: choosePhoto,
                         removeImage: (int index) => choosePhoto.removeAt(index),
                       )
                     : Container(),
@@ -170,27 +184,7 @@ class _AddTaskState extends State<AddTask> {
 
   chooseImageSource() async {
     final res = await ModalClass.showModalBottomCustomSheet(
-        context: context,
-        child: Container(
-            color: MyColors.white,
-            width: context.width,
-            height: 200,
-            child: Column(
-              children: [
-                intermediate(20),
-                ButtonLoading(
-                    loading: false,
-                    showBoxShadow: false,
-                    onTab: () => Navigator.of(context).pop("camera"),
-                    title: "Camera"),
-                intermediate(20),
-                ButtonLoading(
-                    loading: false,
-                    showBoxShadow: false,
-                    onTab: () => Navigator.of(context).pop("gallery"),
-                    title: "Gallery"),
-              ],
-            )));
+        context: context, child: const CameraOrGallery());
     if (res != null && context.mounted) {
       final result = await UploadImage.openImagePicker(
           source: res == "camera" ? ImageSource.camera : ImageSource.gallery,
@@ -256,31 +250,16 @@ class _AddTaskState extends State<AddTask> {
         ));
   }
 
-  timeModal() {
-    return ModalClass.showModalBottomPage(
-        context: context,
-        opacity: 0.4,
-        title: "",
-        child: Center(
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: MyColors.white,
-            ),
-            height: context.width - 50,
-            width: context.width - 50,
-            child: SfDateRangePicker(
-                enablePastDates: false,
-                showActionButtons: true,
-                onCancel: () => Navigator.pop(context),
-                onSubmit: (sub) => Navigator.pop(context),
-                onSelectionChanged: (DateRangePickerSelectionChangedArgs date) {
-                  setState(() {
-                    formattedDate = date.value.toString().substring(0, 10);
-                  });
-                },
-                selectionMode: DateRangePickerSelectionMode.single),
-          ),
-        ));
+  timeModal() async {
+    final res = await showTimePicker(
+      context: context,
+      initialTime: const TimeOfDay(hour: 7, minute: 15),
+    );
+    if (res != null) {
+      String result = Utils.showSelectTime(
+          hour: int.parse(res.hour.toString()),
+          min: int.parse(res.minute.toString()));
+      setState(() => time = result);
+    }
   }
 }

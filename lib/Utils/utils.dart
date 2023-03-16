@@ -19,4 +19,12 @@ class Utils {
       return false;
     }
   }
+
+  static String showSelectTime({required int hour, required int min}) {
+    String hh = "0";
+    String mm = "0";
+    hour < 10 ? hh = "0$hour" : hh = hour.toString();
+    min < 10 ? mm = "0$min" : mm = min.toString();
+    return "$hh : $mm";
+  }
 }
