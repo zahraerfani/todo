@@ -1,8 +1,8 @@
 import 'package:hive/hive.dart';
 
-part 'task.g.dart';
+part '../adapters/task.g.dart';
 
-@HiveType(typeId: 1)
+@HiveType(typeId: 0)
 class Task extends HiveObject {
   @HiveField(0)
   final String taskName;
@@ -26,13 +26,32 @@ class Task extends HiveObject {
       this.note,
       this.image,
       this.subTask});
+  factory Task.fromJson(Map<String, dynamic> json) {
+    var subData = json["subTask"] as List;
+    List<SubTask> mySubTask = subData.map((i) => SubTask.fromJson(i)).toList();
+    return Task(
+      taskName: json["taskName"],
+      completion: json["completion"],
+      executionTime: json["executionTime"],
+      image: json["image"],
+      note: json["note"],
+      record: json["record"],
+      subTask: mySubTask,
+    );
+  }
 }
 
-@HiveType(typeId: 2)
+@HiveType(typeId: 1)
 class SubTask extends HiveObject {
   @HiveField(0)
   final String subtaskName;
   @HiveField(1)
   final bool? check;
   SubTask({required this.subtaskName, this.check});
+  factory SubTask.fromJson(Map<String, dynamic> json) {
+    return SubTask(
+      subtaskName: json["subtaskName"],
+      check: json["check"],
+    );
+  }
 }

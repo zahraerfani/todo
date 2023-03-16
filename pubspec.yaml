@@ -54,6 +54,7 @@ dependencies:
   audioplayers: ^3.0.1
   image_picker: ^0.8.7
   file_picker: ^5.2.6
+  syncfusion_flutter_datepicker: ^20.4.53
   
 dev_dependencies:
   flutter_test:

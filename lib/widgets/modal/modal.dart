@@ -12,7 +12,7 @@ class ModalClass {
     final res = await showGeneralDialog(
       context: context,
       barrierDismissible:
-          false, // should dialog be dismissed when tapped outside
+          true, // should dialog be dismissed when tapped outside
       barrierLabel: title ?? "Modal", // label for barrier
       transitionDuration: const Duration(
           milliseconds:
