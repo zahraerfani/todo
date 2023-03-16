@@ -69,19 +69,22 @@ class SubTaskAdapter extends TypeAdapter<SubTask> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return SubTask(
-      subtaskName: fields[0] as String,
+      subtaskName: fields[0] as String?,
       check: fields[1] as bool?,
+      priority: fields[2] as int?,
     );
   }
 
   @override
   void write(BinaryWriter writer, SubTask obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.subtaskName)
       ..writeByte(1)
-      ..write(obj.check);
+      ..write(obj.check)
+      ..writeByte(2)
+      ..write(obj.priority);
   }
 
   @override

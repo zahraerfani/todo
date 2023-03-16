@@ -10,6 +10,7 @@ import 'package:todo/data/hive/requests/task_request.dart';
 import 'package:todo/data/media_query/media_query.dart';
 import 'package:todo/data/media_query/space_between.dart';
 import 'package:todo/data/model/front/header_model.dart';
+import 'package:todo/data/model/front/sub_task_model.dart';
 import 'package:todo/screen/add_task/component/audio_player.dart';
 import 'package:todo/screen/add_task/component/audio_recorder.dart';
 import 'package:todo/screen/add_task/component/calendar.dart';
@@ -36,6 +37,11 @@ class _AddTaskState extends State<AddTask> {
   String? audioPath;
   List<String> choosePhoto = [];
   String? time;
+  List<SubTaskModel> items = [
+    SubTaskModel(subtaskName: null, check: false, priority: 0)
+  ];
+
+  int count = 0;
 
   String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
@@ -82,6 +88,67 @@ class _AddTaskState extends State<AddTask> {
                   preIcon: Icons.task,
                 ),
                 intermediate(10),
+                ButtonLoading(
+                    btnWidth: context.width - 20,
+                    loading: false,
+                    showBoxShadow: false,
+                    icon: Icons.arrow_forward_sharp,
+                    onTab: () => addSubtask(),
+                    title: "Add a subtask"),
+                // intermediate(10),
+                count > 0
+                    ? Column(
+                        children: [
+                          for (int index = 0; index < count; index++)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                InkWell(
+                                  onTap: () => setState(() => items[index]
+                                      .check = !items[index].check!),
+                                  child: Icon(
+                                    !items[index].check!
+                                        ? Icons.circle_outlined
+                                        : Icons.check_circle,
+                                    color: MyColors.orange,
+                                    size: 24,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: context.width - 150,
+                                  height: 50,
+                                  child: CustomInput(
+                                    enterData: (text) => setState(
+                                        () => items[index].subtaskName = text),
+                                    labelText: "Subtask name",
+                                    borderColor: Colors.transparent,
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      count -= 1;
+                                      items.removeAt(index);
+                                    });
+                                  },
+                                  child: const Icon(
+                                    Icons.clear,
+                                    color: MyColors.grey_40,
+                                    size: 20,
+                                  ),
+                                ),
+                                const Icon(
+                                  Icons.list,
+                                  color: MyColors.grey_40,
+                                  size: 24,
+                                ),
+                              ],
+                            )
+                        ],
+                      )
+                    : Container(),
+                intermediate(10),
+
                 ButtonLoading(
                     btnWidth: context.width - 20,
                     loading: false,
@@ -201,16 +268,29 @@ class _AddTaskState extends State<AddTask> {
     // if (formKey.currentState!.validate() &&
     //     audioPath != null &&
     //     choosePhoto.isNotEmpty) {
+    List<SubTaskModel> copyItems = [];
+    for (int i = 0; i < items.length; i++) {
+      if (items[i].subtaskName != null) {
+        copyItems.add(items[i]);
+      }
+    }
     print("1111111111111111111");
-    List<SubTask> x = [];
-    x.add(SubTask(subtaskName: "subtaskName", check: true));
-    print((x[0].subtaskName));
+    List<SubTask> subtaskList = <SubTask>[];
+    if (copyItems.isNotEmpty) {
+      for (int i = 0; i < copyItems.length; i++) {
+        subtaskList.add(SubTask(
+            subtaskName: copyItems[i].subtaskName,
+            check: copyItems[i].check,
+            priority: copyItems[i].priority));
+      }
+    }
+    // print((x[0].subtaskName));
     TaskHiveRequest.addTask(Task(
-      taskName: "name",
-      record: "audioPath",
-      note: "note",
-      image: ["choosePhoto"], /*subTask: x*/
-    ));
+        taskName: "name",
+        record: "audioPath",
+        note: "note",
+        image: ["choosePhoto"],
+        subTask: subtaskList));
     // TaskHiveRequest.addTask(Task(
     //     taskName: name!,
     //     record: audioPath,
@@ -219,7 +299,7 @@ class _AddTaskState extends State<AddTask> {
     //     subTask: x));
     // Navigator.of(context).pop();
     // } else {
-    //   print("ajsdhgkjd");
+    //   print("null");
     // }
   }
 
@@ -261,5 +341,12 @@ class _AddTaskState extends State<AddTask> {
           min: int.parse(res.minute.toString()));
       setState(() => time = result);
     }
+  }
+
+  addSubtask() {
+    setState(() {
+      count += 1;
+      items.add(SubTaskModel(subtaskName: null, check: false, priority: count));
+    });
   }
 }

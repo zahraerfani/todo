@@ -44,14 +44,17 @@ class Task extends HiveObject {
 @HiveType(typeId: 1)
 class SubTask extends HiveObject {
   @HiveField(0)
-  final String subtaskName;
+  final String? subtaskName;
   @HiveField(1)
   final bool? check;
-  SubTask({required this.subtaskName, this.check});
+  @HiveField(2)
+  final int? priority;
+  SubTask({this.subtaskName, this.check, this.priority});
   factory SubTask.fromJson(Map<String, dynamic> json) {
     return SubTask(
       subtaskName: json["subtaskName"],
       check: json["check"],
+      priority: json["priority"],
     );
   }
 }
