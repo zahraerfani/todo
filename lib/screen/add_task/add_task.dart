@@ -38,9 +38,7 @@ class _AddTaskState extends State<AddTask> {
   String? audioPath;
   List<String> choosePhoto = [];
   String? time;
-  List<SubTaskModel> items = [
-    SubTaskModel(subtaskName: null, check: false, priority: 0)
-  ];
+  List<SubTaskModel> items = [];
 
   int count = 0;
 
@@ -97,10 +95,14 @@ class _AddTaskState extends State<AddTask> {
                     onTab: () => addSubtask(),
                     title: "Add a subtask"),
                 count > 0
-                    ? Column(
+                    ? ReorderableListView(
+                        shrinkWrap: true,
+                        physics: const ClampingScrollPhysics(),
+                        onReorder: reorderData,
                         children: [
-                          for (int index = 0; index < count; index++)
+                          for (int index = 0; index < items.length; index++)
                             AddSubTasks(
+                              key: ObjectKey(items[index]),
                               count: count,
                               remove: () {
                                 setState(() {
@@ -184,7 +186,6 @@ class _AddTaskState extends State<AddTask> {
                     });
                   },
                   labelText: "Add a note",
-                  validation: "required",
                   preIcon: Icons.note,
                 ),
                 intermediate(10),
@@ -234,43 +235,30 @@ class _AddTaskState extends State<AddTask> {
   }
 
   save() {
-    // if (formKey.currentState!.validate() &&
-    //     audioPath != null &&
-    //     choosePhoto.isNotEmpty) {
-    List<SubTaskModel> copyItems = [];
-    for (int i = 0; i < items.length; i++) {
-      if (items[i].subtaskName != null) {
-        copyItems.add(items[i]);
+    if (formKey.currentState!.validate()) {
+      List<SubTaskModel> copyItems = [];
+      for (int i = 0; i < items.length; i++) {
+        if (items[i].subtaskName != null) {
+          copyItems.add(items[i]);
+        }
       }
-    }
-    print("1111111111111111111");
-    List<SubTask> subtaskList = <SubTask>[];
-    if (copyItems.isNotEmpty) {
-      for (int i = 0; i < copyItems.length; i++) {
-        subtaskList.add(SubTask(
-            subtaskName: copyItems[i].subtaskName,
-            check: copyItems[i].check,
-            priority: copyItems[i].priority));
+      List<SubTask> subtaskList = <SubTask>[];
+      if (copyItems.isNotEmpty) {
+        for (int i = 0; i < copyItems.length; i++) {
+          subtaskList.add(SubTask(
+              subtaskName: copyItems[i].subtaskName,
+              check: copyItems[i].check,
+              priority: copyItems[i].priority));
+        }
       }
+      TaskHiveRequest.addTask(Task(
+          taskName: name!,
+          record: audioPath,
+          note: note,
+          image: choosePhoto,
+          subTask: subtaskList));
+      Navigator.of(context).pop();
     }
-    // print(subtaskList[0].subtaskName);
-    TaskHiveRequest.addTask(Task(
-        taskName: "zzzzzzzzzzzz",
-        record: "audioPath",
-        note: "note",
-        image: ["choosePhoto"],
-        subTask: subtaskList));
-
-    // TaskHiveRequest.addTask(Task(
-    //     taskName: name!,
-    //     record: audioPath,
-    //     note: note!,
-    //     image: choosePhoto,
-    //     subTask: x));
-    // Navigator.of(context).pop();
-    // } else {
-    //   print("null");
-    // }
   }
 
   audioModal() {
@@ -314,9 +302,39 @@ class _AddTaskState extends State<AddTask> {
   }
 
   addSubtask() {
+    if (count < 1) {
+      setState(() {
+        count += 1;
+        items.add(
+            SubTaskModel(subtaskName: null, check: false, priority: count - 1));
+      });
+    } else {
+      bool permit = true;
+      for (int i = 0; i < items.length; i++) {
+        if (items[i].subtaskName == null) {
+          permit = false;
+        }
+      }
+      if (permit) {
+        setState(() {
+          count += 1;
+          items.add(SubTaskModel(
+              subtaskName: null, check: false, priority: count - 1));
+        });
+      }
+    }
+  }
+
+  void reorderData(int oldIndex, int newIndex) {
     setState(() {
-      count += 1;
-      items.add(SubTaskModel(subtaskName: null, check: false, priority: count));
+      if (newIndex > oldIndex) {
+        newIndex -= 1;
+      }
+      final item = items.removeAt(oldIndex);
+      items.insert(newIndex, item);
+      for (int index = 0; index < items.length; index++) {
+        items[index].priority = index;
+      }
     });
   }
 }

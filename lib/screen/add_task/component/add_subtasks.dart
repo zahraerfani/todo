@@ -10,14 +10,14 @@ class AddSubTasks extends StatefulWidget {
   final Function() remove;
   final Function() changeCheck;
   final Function(String text) changeText;
-  const AddSubTasks(
-      {Key? key,
-      required this.count,
-      required this.remove,
-      required this.changeCheck,
-      required this.item,
-      required this.changeText})
-      : super(key: key);
+  const AddSubTasks({
+    Key? key,
+    required this.count,
+    required this.remove,
+    required this.changeCheck,
+    required this.item,
+    required this.changeText,
+  }) : super(key: key);
 
   @override
   State<AddSubTasks> createState() => _AddSubTasksState();
