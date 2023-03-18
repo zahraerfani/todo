@@ -253,12 +253,14 @@ class _AddTaskState extends State<AddTask> {
             priority: copyItems[i].priority));
       }
     }
+    // print(subtaskList[0].subtaskName);
     TaskHiveRequest.addTask(Task(
-        taskName: "name",
+        taskName: "zzzzzzzzzzzz",
         record: "audioPath",
         note: "note",
         image: ["choosePhoto"],
         subTask: subtaskList));
+
     // TaskHiveRequest.addTask(Task(
     //     taskName: name!,
     //     record: audioPath,
