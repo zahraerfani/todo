@@ -9,7 +9,10 @@ class TaskHiveRequest {
   }
 
   static deleteTask() {}
-  static updateTask() {}
+  static updateTask(int index, Task task) {
+    Hive.box(HiveBoxNames.task).putAt(index, task);
+  }
+
   static getTask() {
     Hive.box(HiveBoxNames.task).get(0);
   }

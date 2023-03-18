@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:todo/Utils/utils.dart';
 import 'package:todo/config/themes/my_drawing.dart';
 import 'package:todo/data/hive/models/task.dart';
+import 'package:todo/data/hive/requests/task_request.dart';
 import 'package:todo/data/media_query/space_between.dart';
 import 'package:todo/data/model/front/header_model.dart';
 import 'package:todo/screen/add_task/component/audio_player.dart';
@@ -10,7 +12,10 @@ import 'package:todo/widgets/appbar/my_custom_appbar.dart';
 
 class DetailTask extends StatefulWidget {
   final Task myTask;
-  const DetailTask({Key? key, required this.myTask}) : super(key: key);
+  const DetailTask({
+    Key? key,
+    required this.myTask,
+  }) : super(key: key);
 
   @override
   State<DetailTask> createState() => _DetailTaskState();
@@ -31,10 +36,45 @@ class _DetailTaskState extends State<DetailTask> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ShowResultText(
-                title: "task",
-                result: widget.myTask.taskName,
+              Text(
+                widget.myTask.taskName.capitalize(),
+                style: textTheme.headlineLarge,
               ),
+              intermediate(20),
+              (widget.myTask.subTask != null &&
+                      widget.myTask.subTask!.isNotEmpty)
+                  ? Column(
+                      children: [
+                        for (int i = 0; i < widget.myTask.subTask!.length; i++)
+                          Column(
+                            children: [
+                              intermediate(10),
+                              Row(
+                                children: [
+                                  InkWell(
+                                    onTap: () {},
+                                    child: Icon(
+                                      widget.myTask.subTask![i].check!
+                                          ? Icons.check_circle
+                                          : Icons.circle_outlined,
+                                      color: MyColors.orange,
+                                      size: 24,
+                                    ),
+                                  ),
+                                  limitWidth(5),
+                                  Text(
+                                    widget.myTask.subTask![i].subtaskName!
+                                        .capitalize(),
+                                    style: textTheme.bodyText1,
+                                  )
+                                ],
+                              ),
+                              intermediate(10),
+                            ],
+                          )
+                      ],
+                    )
+                  : Container(),
               ShowResultText(
                 title: "description",
                 result: widget.myTask.note,
@@ -53,40 +93,14 @@ class _DetailTaskState extends State<DetailTask> {
               (widget.myTask.image != null && widget.myTask.image!.isNotEmpty)
                   ? ShowGallery(images: widget.myTask.image!)
                   : Container(),
-              (widget.myTask.subTask != null &&
-                      widget.myTask.subTask!.isNotEmpty)
-                  ? Column(
-                      children: [
-                        for (int i = 0; i < widget.myTask.subTask!.length; i++)
-                          Column(
-                            children: [
-                              intermediate(10),
-                              Row(
-                                children: [
-                                  Icon(
-                                    widget.myTask.subTask![i].check!
-                                        ? Icons.check_circle
-                                        : Icons.circle_outlined,
-                                    color: MyColors.orange,
-                                    size: 24,
-                                  ),
-                                  limitWidth(5),
-                                  Text(
-                                    widget.myTask.subTask![i].subtaskName!,
-                                    style: textTheme.bodyText1,
-                                  )
-                                ],
-                              ),
-                              intermediate(10),
-                            ],
-                          )
-                      ],
-                    )
-                  : Container()
             ],
           ),
         ),
       ),
     );
+  }
+
+  _updateTask(int index, Task editedTask) {
+    TaskHiveRequest.updateTask(index, editedTask);
   }
 }
