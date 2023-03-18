@@ -11,8 +11,9 @@ class Splash extends StatefulWidget {
 class _SplashState extends State<Splash> {
   @override
   void initState() {
-    Future.delayed(const Duration(seconds: 1))
-        .then((value) => Navigator.of(context).pushNamed(RouteName.home));
+    Future.delayed(const Duration(seconds: 1)).then((value) =>
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil(RouteName.home, (route) => false));
     super.initState();
   }
 
