@@ -10,12 +10,14 @@ class AudioPlayer extends StatefulWidget {
 
   /// Callback when audio file should be removed
   /// Setting this to null hides the delete button
-  final VoidCallback onDelete;
+  final VoidCallback? onDelete;
+  final bool? showDeleteIcon;
 
   const AudioPlayer({
     Key? key,
     required this.source,
-    required this.onDelete,
+    this.onDelete,
+    this.showDeleteIcon,
   }) : super(key: key);
 
   @override
@@ -73,13 +75,15 @@ class AudioPlayerState extends State<AudioPlayer> {
           children: <Widget>[
             _buildControl(),
             _buildSlider(constraints.maxWidth),
-            IconButton(
-              icon: const Icon(Icons.delete,
-                  color: Color(0xFF73748D), size: _deleteBtnSize),
-              onPressed: () {
-                stop().then((value) => widget.onDelete());
-              },
-            ),
+            (widget.showDeleteIcon != null && widget.showDeleteIcon == true)
+                ? IconButton(
+                    icon: const Icon(Icons.delete,
+                        color: Color(0xFF73748D), size: _deleteBtnSize),
+                    onPressed: () {
+                      stop().then((value) => widget.onDelete!());
+                    },
+                  )
+                : Container(),
           ],
         );
       },

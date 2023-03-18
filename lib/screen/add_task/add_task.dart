@@ -255,6 +255,8 @@ class _AddTaskState extends State<AddTask> {
           taskName: name!,
           record: audioPath,
           note: note,
+          executionTime: time,
+          completion: formattedDate,
           image: choosePhoto,
           subTask: subtaskList));
       Navigator.of(context).pop();

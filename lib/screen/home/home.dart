@@ -39,10 +39,11 @@ class _HomeState extends State<Home> {
               itemBuilder: (context, index) {
                 Task personData = box.get(index);
                 return InkWell(
-                  onTap: () {},
+                  onTap: () => Navigator.of(context)
+                      .pushNamed(RouteName.detailTask, arguments: personData),
                   child: ListTile(
                     title: Text(personData.taskName),
-                    subtitle: Text(personData.taskName),
+                    subtitle: Text(personData.note ?? ""),
                     trailing: IconButton(
                       onPressed: () {},
                       icon: const Icon(

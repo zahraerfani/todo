@@ -26,7 +26,7 @@ class _ShowImagesState extends State<ShowImages> {
                 const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
             child: InkWell(
               onTap: () => Navigator.of(context).pushNamed(RouteName.showImage,
-                  arguments: widget.choosePhoto[index]!),
+                  arguments: widget.choosePhoto[index]),
               child: Stack(
                 alignment: Alignment.topLeft,
                 children: [
