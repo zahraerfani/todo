@@ -87,13 +87,6 @@ class _AddTaskState extends State<AddTask> {
                   preIcon: Icons.task,
                 ),
                 intermediate(10),
-                ButtonLoading(
-                    btnWidth: context.width - 20,
-                    loading: false,
-                    showBoxShadow: false,
-                    icon: Icons.arrow_forward_sharp,
-                    onTab: () => addSubtask(),
-                    title: "Add a subtask"),
                 count > 0
                     ? ReorderableListView(
                         shrinkWrap: true,
@@ -119,6 +112,14 @@ class _AddTaskState extends State<AddTask> {
                         ],
                       )
                     : Container(),
+                intermediate(10),
+                ButtonLoading(
+                    btnWidth: context.width - 20,
+                    loading: false,
+                    showBoxShadow: false,
+                    icon: Icons.arrow_forward_sharp,
+                    onTab: () => addSubtask(),
+                    title: "Add a subtask"),
                 intermediate(10),
                 ButtonLoading(
                     btnWidth: context.width - 20,
