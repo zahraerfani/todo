@@ -39,8 +39,9 @@ class _HomeState extends State<Home> {
               itemBuilder: (context, index) {
                 Task personData = box.get(index);
                 return InkWell(
-                  onTap: () => Navigator.of(context)
-                      .pushNamed(RouteName.detailTask, arguments: personData),
+                  onTap: () => Navigator.of(context).pushNamed(
+                      RouteName.detailTask,
+                      arguments: {"myTask": personData, "index": index}),
                   child: ListTile(
                     title: Text(personData.taskName),
                     subtitle: Text(personData.note ?? ""),

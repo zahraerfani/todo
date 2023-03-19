@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:todo/data/hive/models/task.dart';
 import 'package:todo/screen/add_task/add_task.dart';
-import 'package:todo/screen/deatil_task/detail_task.dart';
+import 'package:todo/screen/detail_task/detail_task.dart';
 import 'package:todo/screen/home/home.dart';
 import 'package:todo/screen/show_image/show_image.dart';
 import 'package:todo/screen/splash/splash.dart';
@@ -24,7 +23,7 @@ class RouteGenerator {
           return ShowImage(image: args as String);
         case RouteName.detailTask:
           return DetailTask(
-            myTask: args as Task,
+            myTask: args as Map<String, dynamic>,
           );
         default:
           return _errorRoute(settings.name);
