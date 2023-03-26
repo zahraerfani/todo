@@ -15,7 +15,6 @@ import 'package:todo/widgets/appbar/my_custom_appbar.dart';
 import 'component/show_galley.dart';
 
 class DetailTask extends StatefulWidget {
-  // final Task myTask;
   final Map<String, dynamic> myTask;
   const DetailTask({
     Key? key,

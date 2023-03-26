@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:record/record.dart';
 import 'package:todo/Utils/upload_image.dart';
 import 'package:todo/Utils/utils.dart';
 import 'package:todo/config/themes/my_drawing.dart';
+import 'package:todo/data/hive/boxes_name.dart';
 import 'package:todo/data/hive/models/task.dart';
 import 'package:todo/data/hive/requests/task_request.dart';
 import 'package:todo/data/media_query/media_query.dart';
@@ -16,6 +18,7 @@ import 'package:todo/screen/add_task/component/audio_player.dart';
 import 'package:todo/screen/add_task/component/audio_recorder.dart';
 import 'package:todo/screen/add_task/component/calendar.dart';
 import 'package:todo/screen/add_task/component/camera_or_gallery.dart';
+import 'package:todo/screen/add_task/component/category_screen.dart';
 import 'package:todo/screen/add_task/component/show_images.dart';
 import 'package:todo/widgets/appbar/my_custom_appbar.dart';
 import 'package:todo/widgets/button/button_loading.dart';
@@ -47,6 +50,7 @@ class _AddTaskState extends State<AddTask> {
   @override
   void initState() {
     permission();
+    getCategoryList();
     super.initState();
   }
 
@@ -59,6 +63,10 @@ class _AddTaskState extends State<AddTask> {
         samplingRate: 44100, // by default
       );
     }
+  }
+
+  getCategoryList() {
+    Iterable x = Hive.box(HiveBoxNames.task).values;
   }
 
   @override
@@ -112,6 +120,14 @@ class _AddTaskState extends State<AddTask> {
                         ],
                       )
                     : Container(),
+                intermediate(10),
+                ButtonLoading(
+                    btnWidth: context.width - 20,
+                    loading: false,
+                    showBoxShadow: false,
+                    icon: Icons.category,
+                    onTab: () => categoryModal(),
+                    title: "Select a category"),
                 intermediate(10),
                 ButtonLoading(
                     btnWidth: context.width - 20,
@@ -262,6 +278,14 @@ class _AddTaskState extends State<AddTask> {
           subTask: subtaskList));
       Navigator.of(context).pop();
     }
+  }
+
+  categoryModal() {
+    return ModalClass.showModalBottomPage(
+        context: context,
+        opacity: 0.8,
+        title: "Category",
+        child: CategoryScreen());
   }
 
   audioModal() {

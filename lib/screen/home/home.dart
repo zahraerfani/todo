@@ -25,8 +25,7 @@ class _HomeState extends State<Home> {
         backButton: false,
       ),
       drawer: const MyCustomDrawer(),
-      body: /* Container(),*/
-          ValueListenableBuilder(
+      body: ValueListenableBuilder(
         valueListenable: Hive.box(HiveBoxNames.task).listenable(),
         builder: (context, Box box, widget) {
           if (box.isEmpty) {

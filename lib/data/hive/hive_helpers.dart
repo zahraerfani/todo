@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:todo/data/hive/models/category.dart';
 import 'package:todo/data/hive/models/task.dart';
 
 // for building database -> flutter packages pub run build_runner build
@@ -36,8 +37,10 @@ class HiveHelper {
 
     Hive.registerAdapter(SubTaskAdapter());
     Hive.registerAdapter(TaskAdapter());
+    Hive.registerAdapter(CategoryTaskAdapter());
     await Hive.openBox("subtask");
     await Hive.openBox("task");
+    await Hive.openBox("category");
 
     // for (final element in HiveAdapterModels.hiveModels) {
     //   Hive.registerAdapter(element.adapter);
