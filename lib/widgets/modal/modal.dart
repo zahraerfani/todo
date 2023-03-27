@@ -8,6 +8,9 @@ class ModalClass {
     required Widget child,
     double? opacity,
     String? title,
+    Color? color,
+    Color? iconColor,
+    Color? titleColor,
   }) async {
     final res = await showGeneralDialog(
       context: context,
@@ -21,24 +24,27 @@ class ModalClass {
         // your widget implementation
         return Scaffold(
           appBar: AppBar(
-              backgroundColor: Colors.black.withOpacity(opacity ?? 0.5),
+              backgroundColor:
+                  color ?? Colors.black.withOpacity(opacity ?? 0.5),
               toolbarHeight: 60,
               centerTitle: true,
               leading: IconButton(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.close,
-                    color: Colors.white,
+                    color: iconColor ?? Colors.white,
                   ),
                   onPressed: () {
                     Navigator.pop(context);
                   }),
               title: Text(
                 title ?? "Modal",
-                style: const TextStyle(
-                    color: Colors.white, fontFamily: 'Overpass', fontSize: 20),
+                style: TextStyle(
+                    color: titleColor ?? Colors.white,
+                    fontFamily: 'Overpass',
+                    fontSize: 20),
               ),
               elevation: 0.0),
-          backgroundColor: Colors.black.withOpacity(opacity ?? 0.5),
+          backgroundColor: color ?? Colors.black.withOpacity(opacity ?? 0.5),
           body: child,
         );
       },

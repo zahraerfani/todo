@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 
 part '../adapters/category.g.dart';
@@ -8,9 +7,9 @@ class CategoryTask extends HiveObject {
   @HiveField(0)
   final String name;
   @HiveField(1)
-  final IconData? icon;
+  final int? icon;
   @HiveField(2)
-  final Color? color;
+  final int? color;
   CategoryTask({
     required this.name,
     required this.icon,
@@ -18,8 +17,8 @@ class CategoryTask extends HiveObject {
   });
   CategoryTask copyWith({
     String? name,
-    IconData? icon,
-    Color? color,
+    int? icon,
+    int? color,
   }) {
     return CategoryTask(
       name: name ?? this.name,

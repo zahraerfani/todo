@@ -37,9 +37,9 @@ class HiveHelper {
 
     Hive.registerAdapter(SubTaskAdapter());
     Hive.registerAdapter(TaskAdapter());
-    Hive.registerAdapter(CategoryTaskAdapter());
     await Hive.openBox("subtask");
     await Hive.openBox("task");
+    Hive.registerAdapter(CategoryTaskAdapter());
     await Hive.openBox("category");
 
     // for (final element in HiveAdapterModels.hiveModels) {

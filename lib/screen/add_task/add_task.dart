@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:record/record.dart';
 import 'package:todo/Utils/upload_image.dart';
 import 'package:todo/Utils/utils.dart';
 import 'package:todo/config/themes/my_drawing.dart';
-import 'package:todo/data/hive/boxes_name.dart';
+import 'package:todo/data/hive/models/category.dart';
 import 'package:todo/data/hive/models/task.dart';
+import 'package:todo/data/hive/requests/category_request.dart';
 import 'package:todo/data/hive/requests/task_request.dart';
 import 'package:todo/data/media_query/media_query.dart';
 import 'package:todo/data/media_query/space_between.dart';
@@ -66,7 +66,19 @@ class _AddTaskState extends State<AddTask> {
   }
 
   getCategoryList() {
-    Iterable x = Hive.box(HiveBoxNames.task).values;
+    List<CategoryTask>? items = CategoryHiveRequest.getCategoryListShow();
+    if (items != null && items.isEmpty) {
+      CategoryHiveRequest.addCategory(
+          CategoryTask(name: "Work", icon: 0xe59a, color: 0xFFFFC0CB));
+      CategoryHiveRequest.addCategory(
+          CategoryTask(name: "Home", icon: 0xe318, color: 0xFF1C005F));
+      CategoryHiveRequest.addCategory(
+          CategoryTask(name: "Purchases", icon: 0xf37e, color: 0xffFF9700));
+      CategoryHiveRequest.addCategory(
+          CategoryTask(name: "Learn", icon: 0xe0ef, color: 0XFFEB5D42));
+      CategoryHiveRequest.addCategory(
+          CategoryTask(name: "Gift", icon: 0xe13e, color: 0xff0D1E41));
+    }
   }
 
   @override
@@ -285,7 +297,10 @@ class _AddTaskState extends State<AddTask> {
         context: context,
         opacity: 0.8,
         title: "Category",
-        child: CategoryScreen());
+        color: MyColors.white,
+        iconColor: MyColors.primaryDark,
+        titleColor: MyColors.primaryDark,
+        child: const CategoryScreen());
   }
 
   audioModal() {

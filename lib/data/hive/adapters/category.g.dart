@@ -18,8 +18,8 @@ class CategoryTaskAdapter extends TypeAdapter<CategoryTask> {
     };
     return CategoryTask(
       name: fields[0] as String,
-      icon: fields[1] as IconData?,
-      color: fields[2] as Color?,
+      icon: fields[1] as int?,
+      color: fields[2] as int?,
     );
   }
 

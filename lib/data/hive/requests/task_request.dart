@@ -8,7 +8,13 @@ class TaskHiveRequest {
     return Hive.box(HiveBoxNames.task).listenable();
   }
 
+  static List<Task> getTaskListShow() {
+    List<Task> items = Hive.box(HiveBoxNames.task).values.toList().cast();
+    return items;
+  }
+
   static deleteTask() {}
+
   static updateTask(int index, Task task) {
     Hive.box(HiveBoxNames.task).putAt(index, task);
   }

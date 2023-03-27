@@ -8,6 +8,12 @@ class CategoryHiveRequest {
     return Hive.box(HiveBoxNames.category).listenable();
   }
 
+  static List<CategoryTask>? getCategoryListShow() {
+    List<CategoryTask> items =
+        Hive.box(HiveBoxNames.category).values.toList().cast();
+    return items;
+  }
+
   static deleteCategory() {}
   static updateCategory(int index, CategoryTask category) {
     Hive.box(HiveBoxNames.category).putAt(index, category);
