@@ -195,7 +195,6 @@ class _AddTaskState extends State<AddTask> {
                     icon: Icons.watch_later_outlined,
                     onTab: () => timeModal(),
                     title: "Task execution time"),
-                // intermediate(10),
                 time != null
                     ? Container(
                         width: context.width - 45,
