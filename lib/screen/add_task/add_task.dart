@@ -43,6 +43,8 @@ class _AddTaskState extends State<AddTask> {
   String? time;
   List<SubTaskModel> items = [];
 
+  List<SubCategory> myList = [];
+
   int count = 0;
 
   String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -286,13 +288,14 @@ class _AddTaskState extends State<AddTask> {
           executionTime: time,
           completion: formattedDate,
           image: choosePhoto,
+          subCategory: myList,
           subTask: subtaskList));
       Navigator.of(context).pop();
     }
   }
 
-  categoryModal() {
-    return ModalClass.showModalBottomPage(
+  categoryModal() async {
+    myList = await ModalClass.showModalBottomPage(
         context: context,
         opacity: 0.8,
         title: "Category",

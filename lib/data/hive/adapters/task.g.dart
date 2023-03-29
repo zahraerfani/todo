@@ -24,13 +24,14 @@ class TaskAdapter extends TypeAdapter<Task> {
       note: fields[4] as String?,
       image: (fields[5] as List?)?.cast<String?>(),
       subTask: (fields[6] as List?)?.cast<SubTask>(),
+      subCategory: (fields[7] as List?)?.cast<SubCategory>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, Task obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.taskName)
       ..writeByte(1)
@@ -44,7 +45,9 @@ class TaskAdapter extends TypeAdapter<Task> {
       ..writeByte(5)
       ..write(obj.image)
       ..writeByte(6)
-      ..write(obj.subTask);
+      ..write(obj.subTask)
+      ..writeByte(7)
+      ..write(obj.subCategory);
   }
 
   @override
@@ -94,6 +97,46 @@ class SubTaskAdapter extends TypeAdapter<SubTask> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is SubTaskAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class SubCategoryAdapter extends TypeAdapter<SubCategory> {
+  @override
+  final int typeId = 2;
+
+  @override
+  SubCategory read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return SubCategory(
+      name: fields[0] as String,
+      icon: fields[1] as int?,
+      color: fields[2] as int?,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, SubCategory obj) {
+    writer
+      ..writeByte(3)
+      ..writeByte(0)
+      ..write(obj.name)
+      ..writeByte(1)
+      ..write(obj.icon)
+      ..writeByte(2)
+      ..write(obj.color);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SubCategoryAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

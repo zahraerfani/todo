@@ -1,9 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:todo/config/themes/my_drawing.dart';
 import 'package:todo/data/hive/boxes_name.dart';
 import 'package:todo/data/hive/models/category.dart';
+import 'package:todo/data/hive/models/task.dart';
 import 'package:todo/data/media_query/space_between.dart';
+import 'package:todo/data/model/sub_category_model.dart';
 import 'package:todo/screen/add_task/component/add_category.dart';
 import 'package:todo/widgets/button/button_loading.dart';
 import 'package:todo/widgets/modal/modal.dart';
@@ -16,11 +20,9 @@ class CategoryScreen extends StatefulWidget {
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
+  List<SubCategory> items = [];
+
+  bool check = false;
 
   @override
   Widget build(BuildContext context) {
@@ -53,13 +55,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             fontFamily: 'MaterialIcons')),
                         iconColor: Color(category.color!),
                         trailing: InkWell(
-                          onTap: () {},
+                          onTap: () => addToSubCategory(category),
                           child: Stack(
                             children: [
                               Icon(
-                                true
-                                    ? Icons.circle_outlined
-                                    : Icons.check_circle,
+                                isInList(name: category.name)
+                                    ? Icons.check_circle
+                                    : Icons.circle_outlined,
                                 size: 24,
                                 color: MyColors.orange,
                               )
@@ -92,7 +94,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     size: 30,
                     color: MyColors.white,
                   ),
-                  onPressed: () {},
+                  onPressed: () => addSubCategoryToMyTask(),
                 ),
               )
             ],
@@ -111,5 +113,40 @@ class _CategoryScreenState extends State<CategoryScreen> {
         iconColor: MyColors.primaryDark,
         titleColor: MyColors.primaryDark,
         child: const AddCategory());
+  }
+
+  addToSubCategory(CategoryTask item) {
+    SubCategory changeItem =
+        SubCategory(name: item.name, icon: item.icon, color: item.color);
+    int index = items.indexWhere((element) => element.name == changeItem.name);
+    if (index >= 0) {
+      setState(() {
+        items.remove(changeItem);
+      });
+    } else {
+      setState(() {
+        items.add(changeItem);
+      });
+    }
+  }
+
+  bool isInList({required String name}) {
+    int index = items.indexWhere((element) => element.name == name);
+    if (index >= 0) {
+      return true;
+    }
+    return false;
+  }
+
+  addSubCategoryToMyTask() {
+    log(items.toString());
+    List<SubCategoryModel> myList = [];
+    for (int index = 0; index < items.length; index++) {
+      myList.add(SubCategoryModel(
+          name: items[index].name,
+          icon: items[index].icon,
+          color: items[index].color));
+    }
+    Navigator.of(context).pop(items);
   }
 }

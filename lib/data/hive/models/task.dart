@@ -19,6 +19,8 @@ class Task extends HiveObject {
   final List<String?>? image;
   @HiveField(6)
   final List<SubTask>? subTask;
+  @HiveField(7)
+  final List<SubCategory>? subCategory;
   Task(
       {required this.taskName,
       this.record,
@@ -26,7 +28,8 @@ class Task extends HiveObject {
       this.executionTime,
       this.note,
       this.image,
-      this.subTask});
+      this.subTask,
+      this.subCategory});
 
   Task copyWith({
     String? taskName,
@@ -36,6 +39,7 @@ class Task extends HiveObject {
     String? note,
     List<String?>? image,
     List<SubTask>? subTask,
+    List<SubCategory>? subCategory,
   }) {
     return Task(
         taskName: taskName ?? this.taskName,
@@ -44,7 +48,8 @@ class Task extends HiveObject {
         executionTime: executionTime ?? this.executionTime,
         note: note ?? this.note,
         image: image ?? this.image,
-        subTask: subTask ?? this.subTask);
+        subTask: subTask ?? this.subTask,
+        subCategory: subCategory ?? this.subCategory);
   }
 
   @override
@@ -58,7 +63,8 @@ class Task extends HiveObject {
         other.completion == completion &&
         other.executionTime == executionTime &&
         other.note == note &&
-        listEquals(other.image, image);
+        listEquals(other.image, image) &&
+        listEquals(other.subCategory, subCategory);
   }
 
   @override
@@ -69,7 +75,8 @@ class Task extends HiveObject {
       completion.hashCode ^
       executionTime.hashCode ^
       note.hashCode ^
-      image.hashCode;
+      image.hashCode ^
+      subCategory.hashCode;
 }
 
 @HiveType(typeId: 1)
@@ -106,4 +113,43 @@ class SubTask extends HiveObject {
 
   @override
   int get hashCode => subtaskName.hashCode ^ check.hashCode ^ priority.hashCode;
+}
+
+@HiveType(typeId: 2)
+class SubCategory extends HiveObject {
+  @HiveField(0)
+  final String name;
+  @HiveField(1)
+  final int? icon;
+  @HiveField(2)
+  final int? color;
+  SubCategory({
+    required this.name,
+    required this.icon,
+    required this.color,
+  });
+  SubCategory copyWith({
+    String? name,
+    int? icon,
+    int? color,
+  }) {
+    return SubCategory(
+      name: name ?? this.name,
+      icon: icon ?? this.icon,
+      color: color ?? this.color,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is SubCategory &&
+        other.name == name &&
+        other.icon == icon &&
+        other.color == color;
+  }
+
+  @override
+  int get hashCode => name.hashCode ^ icon.hashCode ^ color.hashCode;
 }

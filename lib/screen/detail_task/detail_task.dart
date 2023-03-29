@@ -10,6 +10,7 @@ import 'package:todo/data/model/front/sub_task_model.dart';
 import 'package:todo/screen/add_task/component/audio_player.dart';
 import 'package:todo/screen/detail_task/component/show_result_text.dart';
 import 'package:todo/screen/detail_task/component/show_subtask.dart';
+import 'package:todo/screen/detail_task/component/show_tags.dart';
 import 'package:todo/widgets/appbar/my_custom_appbar.dart';
 
 import 'component/show_galley.dart';
@@ -61,6 +62,10 @@ class _DetailTaskState extends State<DetailTask> {
                         )
                       : Container(),
                   intermediate(20),
+                  ShowTags(
+                    items: personData.subCategory!,
+                  ),
+                  intermediate(10),
                   ShowResultText(
                     title: "",
                     result: personData.note,

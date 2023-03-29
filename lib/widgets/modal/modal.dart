@@ -49,6 +49,7 @@ class ModalClass {
         );
       },
     );
+    return res;
   }
 
   static Future showModalBottomCustomSheet({
