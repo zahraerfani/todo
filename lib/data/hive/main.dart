@@ -14,6 +14,5 @@ class HiveAdapterModels {
 class HiveDetails<T> {
   final TypeAdapter<T> adapter;
   final String name;
-
   HiveDetails(this.adapter, this.name);
 }

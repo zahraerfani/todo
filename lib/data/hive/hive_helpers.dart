@@ -8,14 +8,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:todo/data/hive/models/category.dart';
 import 'package:todo/data/hive/models/task.dart';
 
-// for building database -> flutter packages pub run build_runner build
-
 class HiveHelper {
-  // late String name;
-  //
-  // HiveHelper(this.name);
-
-  static Future<void> initializes<T>(/*List<HiveDetails<T>> hives*/) async {
+  static Future<void> initializes<T>() async {
     if (kIsWeb) {
       Hive.init("personalDb");
     } else {
@@ -27,7 +21,7 @@ class HiveHelper {
         try {
           await directory.create(recursive: true);
         } on Exception {
-          log("u have error");
+          log("error");
         }
       }
       Hive.init(directory.path);
@@ -43,11 +37,6 @@ class HiveHelper {
     await Hive.openBox("subCategory");
     Hive.registerAdapter(CategoryTaskAdapter());
     await Hive.openBox("category");
-
-    // for (final element in HiveAdapterModels.hiveModels) {
-    //   Hive.registerAdapter(element.adapter);
-    //   await Hive.openBox(element.name);
-    // }
   }
 
   static void close(String name) async {
@@ -62,46 +51,4 @@ class HiveHelper {
       await Hive.openBox(name, path: join(directory.path, name));
     }
   }
-//
-// T getRecord<T>(Object key) {
-//   final box = Hive.box(name);
-//
-//   return box.get(key) as T;
-// }
-//
-// List getRecords() {
-//   final box = Hive.box(name);
-//   List result = box.values.toList();
-//
-//   return result;
-// }
-//
-// Future<bool> put<T>(Object key, T value) async {
-//   bool status = false;
-//
-//   try {
-//     final box = Hive.box(name);
-//     await box.put(key, value).whenComplete(() {
-//       status = true;
-//     });
-//   } on Exception catch (e) {
-//     log(e.toString());
-//     status = false;
-//   }
-//
-//   return status;
-// }
-//
-// Future<bool> delete<T>(Object key) async {
-//   final box = Hive.box(name);
-//   bool status = false;
-//
-//   await box.delete(key).whenComplete(() {
-//     status = true;
-//   }).onError((error, stackTrace) {
-//     status = false;
-//   });
-//
-//   return status;
-// }
 }
