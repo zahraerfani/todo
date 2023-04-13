@@ -17,6 +17,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final encryptedTaskBox = Hive.box(HiveBoxNames.task);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +28,8 @@ class _HomeState extends State<Home> {
       ),
       drawer: const MyCustomDrawer(),
       body: ValueListenableBuilder(
-        valueListenable: Hive.box(HiveBoxNames.task).listenable(),
+        // valueListenable: Hive.box(HiveBoxNames.task).listenable(),
+        valueListenable: encryptedTaskBox.listenable(),
         builder: (context, Box box, widget) {
           if (box.isEmpty) {
             return const Center(

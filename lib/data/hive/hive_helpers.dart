@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -28,15 +30,39 @@ class HiveHelper {
     }
 
     await Hive.initFlutter();
+    const secureStorage = FlutterSecureStorage();
+    final encryprionKey = await secureStorage.read(key: 'key');
+    if (encryprionKey == null) {
+      final key = Hive.generateSecureKey();
+      await secureStorage.write(
+        key: 'key',
+        value: base64UrlEncode(key),
+      );
+    }
+
+    final key = await secureStorage.read(key: 'key');
+    final encryptionKey = base64Url.decode(key!);
 
     Hive.registerAdapter(SubTaskAdapter());
     Hive.registerAdapter(TaskAdapter());
     Hive.registerAdapter(SubCategoryAdapter());
-    await Hive.openBox("subtask");
-    await Hive.openBox("task");
-    await Hive.openBox("subCategory");
+    await Hive.openBox(
+      "subtask",
+      encryptionCipher: HiveAesCipher(encryptionKey),
+    );
+    await Hive.openBox(
+      "task",
+      encryptionCipher: HiveAesCipher(encryptionKey),
+    );
+    await Hive.openBox(
+      "subCategory",
+      encryptionCipher: HiveAesCipher(encryptionKey),
+    );
     Hive.registerAdapter(CategoryTaskAdapter());
-    await Hive.openBox("category");
+    await Hive.openBox(
+      "category",
+      encryptionCipher: HiveAesCipher(encryptionKey),
+    );
   }
 
   static void close(String name) async {
