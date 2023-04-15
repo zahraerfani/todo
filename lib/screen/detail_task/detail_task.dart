@@ -63,7 +63,7 @@ class _DetailTaskState extends State<DetailTask> {
                       : Container(),
                   intermediate(20),
                   ShowTags(
-                    items: personData.subCategory!,
+                    items: personData.subCategory,
                   ),
                   intermediate(10),
                   ShowResultText(
@@ -122,7 +122,8 @@ class _DetailTaskState extends State<DetailTask> {
         executionTime: editedTask.executionTime,
         completion: editedTask.completion,
         record: editedTask.record,
-        subTask: subtaskList);
+        subTask: subtaskList,
+        subCategory: editedTask.subCategory);
     TaskHiveRequest.updateTask(index, changeTasK);
   }
 }
