@@ -5,6 +5,7 @@ import 'package:todo/config/route/const.dart';
 import 'package:todo/config/themes/my_drawing.dart';
 import 'package:todo/data/hive/boxes_name.dart';
 import 'package:todo/data/hive/models/task.dart';
+import 'package:todo/data/hive/requests/task_request.dart';
 import 'package:todo/data/model/front/header_model.dart';
 import 'package:todo/screen/drawer/drawer.dart';
 import 'package:todo/widgets/appbar/my_custom_appbar.dart';
@@ -45,7 +46,7 @@ class _HomeState extends State<Home> {
                     title: Text(personData.taskName),
                     subtitle: Text(personData.note ?? ""),
                     trailing: IconButton(
-                      onPressed: () {},
+                      onPressed: () => TaskHiveRequest.deleteTask(index),
                       icon: const Icon(
                         Icons.delete,
                         color: Colors.red,
