@@ -24,6 +24,7 @@ import 'package:todo/widgets/appbar/my_custom_appbar.dart';
 import 'package:todo/widgets/button/button_loading.dart';
 import 'package:todo/widgets/input/custom_input.dart';
 import 'package:todo/widgets/modal/modal.dart';
+import 'package:todo/widgets/show_tags/show_tags.dart';
 
 class AddTask extends StatefulWidget {
   const AddTask({Key? key}) : super(key: key);
@@ -109,6 +110,23 @@ class _AddTaskState extends State<AddTask> {
                   preIcon: Icons.task,
                 ),
                 intermediate(10),
+                ButtonLoading(
+                    btnWidth: context.width - 20,
+                    loading: false,
+                    showBoxShadow: false,
+                    icon: Icons.category,
+                    onTab: () => categoryModal(),
+                    title: "Select a category"),
+                myList.isNotEmpty
+                    ? Column(
+                        children: [
+                          intermediate(10),
+                          ShowTags(
+                            items: myList,
+                          ),
+                        ],
+                      )
+                    : Container(),
                 count > 0
                     ? ReorderableListView(
                         shrinkWrap: true,
@@ -134,14 +152,6 @@ class _AddTaskState extends State<AddTask> {
                         ],
                       )
                     : Container(),
-                intermediate(10),
-                ButtonLoading(
-                    btnWidth: context.width - 20,
-                    loading: false,
-                    showBoxShadow: false,
-                    icon: Icons.category,
-                    onTab: () => categoryModal(),
-                    title: "Select a category"),
                 intermediate(10),
                 ButtonLoading(
                     btnWidth: context.width - 20,
@@ -295,14 +305,19 @@ class _AddTaskState extends State<AddTask> {
   }
 
   categoryModal() async {
-    myList = await ModalClass.showModalBottomPage(
+    List<SubCategory> category = await ModalClass.showModalBottomPage(
         context: context,
         opacity: 0.8,
         title: "Category",
         color: MyColors.white,
         iconColor: MyColors.primaryDark,
         titleColor: MyColors.primaryDark,
-        child: const CategoryScreen());
+        child: CategoryScreen(
+          selectedItems: myList,
+        ));
+    setState(() {
+      myList = category;
+    });
   }
 
   audioModal() {

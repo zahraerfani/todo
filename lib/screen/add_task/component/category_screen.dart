@@ -13,7 +13,9 @@ import 'package:todo/widgets/button/button_loading.dart';
 import 'package:todo/widgets/modal/modal.dart';
 
 class CategoryScreen extends StatefulWidget {
-  const CategoryScreen({Key? key}) : super(key: key);
+  final List<SubCategory>? selectedItems;
+  const CategoryScreen({Key? key, required this.selectedItems})
+      : super(key: key);
 
   @override
   State<CategoryScreen> createState() => _CategoryScreenState();
@@ -23,6 +25,14 @@ class _CategoryScreenState extends State<CategoryScreen> {
   List<SubCategory> items = [];
 
   bool check = false;
+
+  @override
+  void initState() {
+    setState(() {
+      items = widget.selectedItems ?? [];
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
