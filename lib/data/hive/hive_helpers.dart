@@ -31,17 +31,16 @@ class HiveHelper {
 
     await Hive.initFlutter();
     const secureStorage = FlutterSecureStorage();
-    final encryprionKey = await secureStorage.read(key: 'key');
-    if (encryprionKey == null) {
-      final key = Hive.generateSecureKey();
+    var containsEncryptionKey =
+        await secureStorage.containsKey(key: 'encryptionKey');
+    if (!containsEncryptionKey) {
+      var key = Hive.generateSecureKey();
       await secureStorage.write(
-        key: 'key',
-        value: base64UrlEncode(key),
-      );
+          key: 'encryptionKey', value: base64UrlEncode(key));
     }
 
-    final key = await secureStorage.read(key: 'key');
-    final encryptionKey = base64Url.decode(key!);
+    String? requestKey = await secureStorage.read(key: 'encryptionKey');
+    var encryptionKey = base64Url.decode(requestKey!);
 
     Hive.registerAdapter(SubTaskAdapter());
     Hive.registerAdapter(TaskAdapter());
