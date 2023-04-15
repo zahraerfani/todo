@@ -22,7 +22,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MyCustomAppBar(
-        item: HeaderModel(title: "Home", icon: []),
+        item: HeaderModel(title: "My Task List", icon: []),
         backButton: false,
       ),
       drawer: const MyCustomDrawer(),
