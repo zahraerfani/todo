@@ -1,4 +1,4 @@
 # todo app flutter
 
-This project is a starting point for a Flutter application.
+ToDo App using Flutter implemented with Hive DataBase
 
