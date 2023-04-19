@@ -15,24 +15,15 @@ import 'package:todo/widgets/show_tags/show_tags.dart';
 
 import 'component/show_galley.dart';
 
-class DetailTask extends StatefulWidget {
-  final Map<String, dynamic> myTask;
+class DetailTask extends StatelessWidget {
+  final int index;
   const DetailTask({
     Key? key,
-    required this.myTask,
+    required this.index,
   }) : super(key: key);
 
   @override
-  State<DetailTask> createState() => _DetailTaskState();
-}
-
-class _DetailTaskState extends State<DetailTask> {
-  // Task? result;
-  int? keyIndex;
-  @override
   Widget build(BuildContext context) {
-    // result = widget.myTask["myTask"];
-    keyIndex = widget.myTask["index"];
     TextTheme textTheme = Theme.of(context).textTheme;
     return Scaffold(
       appBar: MyCustomAppBar(
@@ -45,7 +36,7 @@ class _DetailTaskState extends State<DetailTask> {
           child: ValueListenableBuilder(
             valueListenable: Hive.box(HiveBoxNames.task).listenable(),
             builder: (context, Box box, widget) {
-              Task taskData = box.getAt(keyIndex!);
+              Task taskData = box.getAt(index);
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -57,8 +48,7 @@ class _DetailTaskState extends State<DetailTask> {
                   (taskData.subTask != null && taskData.subTask!.isNotEmpty)
                       ? ShowSubtask(
                           task: taskData,
-                          update: (int i) =>
-                              _updateTask(i, keyIndex!, taskData),
+                          update: (int i) => _updateTask(i, index, taskData),
                         )
                       : Container(),
                   intermediate(20),

@@ -10,26 +10,8 @@ import 'package:todo/data/model/front/header_model.dart';
 import 'package:todo/screen/drawer/drawer.dart';
 import 'package:todo/widgets/appbar/my_custom_appbar.dart';
 
-class Home extends StatefulWidget {
+class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
-
-  @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  @override
-  void initState() {
-    List<Task> item = TaskHiveRequest.getTaskListShow();
-
-    if (item.isNotEmpty) {
-      print("dfmgbdkjfgfj");
-      for (int i = 0; i < item.length; i++) {
-        print(item[i].taskName);
-      }
-    }
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +34,8 @@ class _HomeState extends State<Home> {
               itemBuilder: (context, index) {
                 Task taskData = box.getAt(index);
                 return InkWell(
-                  onTap: () => Navigator.of(context).pushNamed(
-                      RouteName.detailTask,
-                      arguments: {"myTask": taskData, "index": index}),
+                  onTap: () => Navigator.of(context)
+                      .pushNamed(RouteName.detailTask, arguments: index),
                   child: ListTile(
                     title: Text(taskData.taskName),
                     subtitle: Text(taskData.note ?? ""),

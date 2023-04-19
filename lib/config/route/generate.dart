@@ -23,7 +23,7 @@ class RouteGenerator {
           return ShowImage(image: args as String);
         case RouteName.detailTask:
           return DetailTask(
-            myTask: args as Map<String, dynamic>,
+            index: args as int,
           );
         default:
           return _errorRoute(settings.name);
