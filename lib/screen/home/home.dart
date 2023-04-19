@@ -19,6 +19,19 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   @override
+  void initState() {
+    List<Task> item = TaskHiveRequest.getTaskListShow();
+
+    if (item.isNotEmpty) {
+      print("dfmgbdkjfgfj");
+      for (int i = 0; i < item.length; i++) {
+        print(item[i].taskName);
+      }
+    }
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MyCustomAppBar(
@@ -37,14 +50,14 @@ class _HomeState extends State<Home> {
             return ListView.builder(
               itemCount: box.length,
               itemBuilder: (context, index) {
-                Task personData = box.get(index);
+                Task taskData = box.getAt(index);
                 return InkWell(
                   onTap: () => Navigator.of(context).pushNamed(
                       RouteName.detailTask,
-                      arguments: {"myTask": personData, "index": index}),
+                      arguments: {"myTask": taskData, "index": index}),
                   child: ListTile(
-                    title: Text(personData.taskName),
-                    subtitle: Text(personData.note ?? ""),
+                    title: Text(taskData.taskName),
+                    subtitle: Text(taskData.note ?? ""),
                     trailing: IconButton(
                       onPressed: () => TaskHiveRequest.deleteTask(index),
                       icon: const Icon(

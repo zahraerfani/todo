@@ -14,14 +14,14 @@ class TaskHiveRequest {
   }
 
   static deleteTask(int index) {
-    Task item = Hive.box(HiveBoxNames.task).get(index);
-    String taskName = item.taskName;
-    final Map taskMap = Hive.box(HiveBoxNames.task).toMap();
-    dynamic taskKey;
-    taskMap.forEach((key, value) {
-      if (value.taskName == taskName) taskKey = key;
-    });
-    Hive.box(HiveBoxNames.task).delete(taskKey);
+    // Task item = Hive.box(HiveBoxNames.task).get(index);
+    // String taskName = item.taskName;
+    // final Map taskMap = Hive.box(HiveBoxNames.task).toMap();
+    // dynamic taskKey;
+    // taskMap.forEach((key, value) {
+    //   if (value.taskName == taskName) taskKey = key;
+    // });
+    Hive.box(HiveBoxNames.task).deleteAt(index);
   }
 
   static updateTask(int index, Task task) {

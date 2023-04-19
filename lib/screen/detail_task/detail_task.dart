@@ -27,11 +27,11 @@ class DetailTask extends StatefulWidget {
 }
 
 class _DetailTaskState extends State<DetailTask> {
-  Task? result;
+  // Task? result;
   int? keyIndex;
   @override
   Widget build(BuildContext context) {
-    result = widget.myTask["myTask"];
+    // result = widget.myTask["myTask"];
     keyIndex = widget.myTask["index"];
     TextTheme textTheme = Theme.of(context).textTheme;
     return Scaffold(
@@ -45,49 +45,49 @@ class _DetailTaskState extends State<DetailTask> {
           child: ValueListenableBuilder(
             valueListenable: Hive.box(HiveBoxNames.task).listenable(),
             builder: (context, Box box, widget) {
-              Task personData = box.get(keyIndex);
+              Task taskData = box.getAt(keyIndex!);
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    personData.taskName.capitalize(),
+                    taskData.taskName.capitalize(),
                     style: textTheme.headlineLarge,
                   ),
                   intermediate(20),
-                  (personData.subTask != null && personData.subTask!.isNotEmpty)
+                  (taskData.subTask != null && taskData.subTask!.isNotEmpty)
                       ? ShowSubtask(
-                          task: personData,
+                          task: taskData,
                           update: (int i) =>
-                              _updateTask(i, keyIndex!, personData),
+                              _updateTask(i, keyIndex!, taskData),
                         )
                       : Container(),
                   intermediate(20),
                   ShowTags(
-                    items: personData.subCategory,
+                    items: taskData.subCategory,
                   ),
                   intermediate(10),
                   ShowResultText(
                     title: "",
-                    result: personData.note,
+                    result: taskData.note,
                     icon: Icons.description,
                   ),
                   ShowResultText(
                     title: "executionTime",
-                    result: personData.executionTime,
+                    result: taskData.executionTime,
                     icon: Icons.hourglass_bottom,
                   ),
                   ShowResultText(
                     title: "Task completion",
-                    result: personData.completion,
+                    result: taskData.completion,
                     icon: Icons.calendar_month,
                   ),
                   intermediate(20),
-                  personData.record != null
-                      ? AudioPlayer(source: personData.record!)
+                  taskData.record != null
+                      ? AudioPlayer(source: taskData.record!)
                       : Container(),
                   intermediate(20),
-                  (personData.image != null && personData.image!.isNotEmpty)
-                      ? ShowGallery(images: personData.image!)
+                  (taskData.image != null && taskData.image!.isNotEmpty)
+                      ? ShowGallery(images: taskData.image!)
                       : Container(),
                 ],
               );
